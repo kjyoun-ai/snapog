@@ -3,11 +3,13 @@ import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { createApiKey, upgradeKey } from "@/lib/db";
 
-const PLAN_MAP: Record<string, string> = {
-  price_starter: "starter",
-  price_pro: "pro",
-  price_enterprise: "enterprise",
-};
+function planFromPriceId(priceId: string): string {
+  const starterPriceId = process.env.STRIPE_STARTER_PRICE_ID;
+  const proPriceId = process.env.STRIPE_PRO_PRICE_ID;
+  if (starterPriceId && priceId === starterPriceId) return "starter";
+  if (proPriceId && priceId === proPriceId) return "pro";
+  return "starter";
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -31,8 +33,8 @@ export async function POST(request: NextRequest) {
     const customerId = session.customer as string;
 
     if (email) {
-      const priceId = session.metadata?.priceId || "price_starter";
-      const plan = PLAN_MAP[priceId] || "starter";
+      const priceId = session.metadata?.priceId || "";
+      const plan = planFromPriceId(priceId);
       await createApiKey(email, plan, customerId);
     }
   }
@@ -41,7 +43,7 @@ export async function POST(request: NextRequest) {
     const subscription = event.data.object as Stripe.Subscription;
     const customerId = subscription.customer as string;
     const priceId = subscription.items.data[0]?.price.id;
-    const plan = PLAN_MAP[priceId] || "starter";
+    const plan = planFromPriceId(priceId);
     await upgradeKey(customerId, plan);
   }
 
