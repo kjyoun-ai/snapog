@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     if (email) {
       const priceId = session.metadata?.priceId || "price_starter";
       const plan = PLAN_MAP[priceId] || "starter";
-      createApiKey(email, plan, customerId);
+      await createApiKey(email, plan, customerId);
     }
   }
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const customerId = subscription.customer as string;
     const priceId = subscription.items.data[0]?.price.id;
     const plan = PLAN_MAP[priceId] || "starter";
-    upgradeKey(customerId, plan);
+    await upgradeKey(customerId, plan);
   }
 
   return NextResponse.json({ received: true });

@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Valid email required" }, { status: 400 });
   }
 
-  const existing = getKeyByEmail(email);
+  const existing = await getKeyByEmail(email);
   if (existing) {
     return NextResponse.json({
       key: existing.key,
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const { key } = createApiKey(email);
+  const { key } = await createApiKey(email);
   return NextResponse.json({
     key,
     plan: "free",

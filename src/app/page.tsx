@@ -1,56 +1,8 @@
 import Link from "next/link";
+import PricingSection from "@/components/PricingSection";
 
 const DEMO_URL =
   "/api/og?title=SnapOG&description=Beautiful+social+images,+instantly&theme=gradient";
-
-const PLANS = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "/mo",
-    images: "50 images/mo",
-    features: ["5 templates", "PNG output", "Community support"],
-    cta: "Get Started",
-    highlight: false,
-  },
-  {
-    name: "Starter",
-    price: "$9",
-    period: "/mo",
-    images: "1,000 images/mo",
-    features: ["All templates", "PNG + JPEG", "Custom fonts", "Email support"],
-    cta: "Start Free Trial",
-    highlight: true,
-  },
-  {
-    name: "Pro",
-    price: "$29",
-    period: "/mo",
-    images: "10,000 images/mo",
-    features: [
-      "Everything in Starter",
-      "SVG output",
-      "Custom branding",
-      "Priority support",
-    ],
-    cta: "Start Free Trial",
-    highlight: false,
-  },
-  {
-    name: "Scale",
-    price: "$79",
-    period: "/mo",
-    images: "50,000 images/mo",
-    features: [
-      "Everything in Pro",
-      "Dedicated CDN",
-      "SLA guarantee",
-      "Slack support",
-    ],
-    cta: "Contact Us",
-    highlight: false,
-  },
-];
 
 const TEMPLATES = ["default", "dark", "gradient", "minimal", "bold"] as const;
 
@@ -185,47 +137,7 @@ export default function Home() {
         <p className="text-gray-400 text-center mb-12">
           Start free. Scale as you grow. No hidden fees.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {PLANS.map((plan) => (
-            <div
-              key={plan.name}
-              className={`rounded-2xl border p-6 flex flex-col ${
-                plan.highlight
-                  ? "border-purple-500/50 bg-purple-500/5"
-                  : "border-white/10 bg-[#111]"
-              }`}
-            >
-              <div className="text-sm font-medium text-gray-400 mb-2">
-                {plan.name}
-              </div>
-              <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-4xl font-bold">{plan.price}</span>
-                <span className="text-gray-500 text-sm">{plan.period}</span>
-              </div>
-              <div className="text-sm text-gray-400 mb-6">{plan.images}</div>
-              <ul className="flex-1 space-y-2 mb-6">
-                {plan.features.map((f) => (
-                  <li
-                    key={f}
-                    className="text-sm text-gray-300 flex items-start gap-2"
-                  >
-                    <span className="text-purple-400 mt-0.5">&#10003;</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <button
-                className={`w-full py-2.5 rounded-lg text-sm font-medium transition ${
-                  plan.highlight
-                    ? "bg-purple-600 hover:bg-purple-500 text-white"
-                    : "bg-white/5 hover:bg-white/10 text-gray-300"
-                }`}
-              >
-                {plan.cta}
-              </button>
-            </div>
-          ))}
-        </div>
+        <PricingSection />
       </section>
 
       {/* Footer */}
