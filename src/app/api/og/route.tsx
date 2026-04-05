@@ -1,8 +1,7 @@
 import { ImageResponse } from "@vercel/og";
 import type { NextRequest } from "next/server";
-import { validateApiKey, recordUsage } from "@/lib/db";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 type Theme = "default" | "dark" | "gradient" | "minimal" | "bold";
 
@@ -231,20 +230,6 @@ export async function GET(request: NextRequest) {
     searchParams.get("description") || "Generated with SnapOG";
   const theme = (searchParams.get("theme") || "default") as Theme;
   const logo = searchParams.get("logo") || "SnapOG";
-
-  // API key auth — optional for demo, required for production usage
-  const apiKey = searchParams.get("key") || request.headers.get("x-api-key");
-
-  if (apiKey) {
-    const auth = validateApiKey(apiKey);
-    if (!auth.valid) {
-      return new Response(
-        JSON.stringify({ error: auth.remaining === 0 ? "Monthly limit exceeded" : "Invalid API key" }),
-        { status: auth.remaining === 0 ? 429 : 401, headers: { "Content-Type": "application/json" } }
-      );
-    }
-    recordUsage(auth.keyId!);
-  }
 
   const Template = TEMPLATES[theme] || TEMPLATES.default;
 
